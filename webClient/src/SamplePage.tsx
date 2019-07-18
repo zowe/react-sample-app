@@ -32,8 +32,8 @@ class SamplePage extends React.Component<any, any> {
         <div>
           <div style={mergeStyles(styles.appComponent, styles.iframeFont, styles.testPanelContainer)}>
             <div style={mergeStyles(styles.testPanel, styles.pluginTestPanel)}>
-              <div style={styles.bottom10}>
                 <span style={styles.biggerBoldText}>{t('plugin_request_test')}</span>
+              <div style={styles.bottom10}>
                   {/* Tests the sending of requests to other plugins. Defaults to send a message
                   to itself (and responding) to show more parts of the API */}
                 <button style={mergeStyles(styles.iframeButton, styles.shadowed)} type="button" onClick={this.props.sendAppRequest}>{t('send_app_request')}</button>
@@ -43,23 +43,38 @@ class SamplePage extends React.Component<any, any> {
               <span style={styles.boldText}>{t('application_identifier')}</span>
               <div>
                 <div style={styles.divInput}>
-                  <input style={mergeStyles(styles.iframeInput, styles.inputHeight, styles.inputCorner, styles.inputText, styles.shadowed)} type="text" value={this.props.appId} onChange={this.props.handleAppIdChange}/>
-                </div>
+      <select style={mergeStyles(styles.iframeInput, styles.inputHeight, styles.inputCorner, styles.inputText, styles.shadowed)} id="appInput" disabled={this.props.appTarget === "PluginSpecifyTargetID" || this.props.actionType === 'Maximize' || this.props.actionType === 'Minimize'}  onChange={this.props.handleAppIdChange}>
+      {
+        this.props.appIdOptions.map(el => <option value={el.value}>{el.description}</option>)
+      }
+      </select>
+      </div>
+        <label style={styles.boldText}>{t('target_id')}</label>
+              <div style={styles.divInput}>
+                  <input style={mergeStyles(styles.iframeInput, styles.inputHeight, styles.inputCorner, styles.inputText, styles.shadowed)} type="number" id="targetInput" disabled={this.props.appTarget !== "PluginSpecifyTargetID" || this.props.actionType === "Launch" || this.props.actionType === "Message" } onChange={this.props.handleTargetIdChange} value={this.props.targetId}/>
+              </div>
                 <div>
                   {/* Action types are used to determine what sort of Action is being taken on whatever App instance is the target. Launch simply creates a new instance with the context you provide, but Message can be used to communicate with an already open Instance to drive some action */}        
-                  <label style={styles.boldText}>{t('action_type')}</label>
+      <label style={styles.boldText}>{t('action_type')}</label>
                   <input type="radio" value="Launch" name="actionType" checked={this.props.actionType == "Launch"} onChange={this.props.handleActionTypeChange}/>
-                  <label htmlFor="actionLaunch">{t('launch')}</label>
+                  <label  style={styles.labelPadding} htmlFor="actionLaunch">{t('launch')}</label>
                   <input type="radio" value="Message" name="actionType" checked={this.props.actionType == "Message"} onChange={this.props.handleActionTypeChange}/>
-                  <label htmlFor="actionMessage">{t('message')}</label>
+                  <label  style={styles.labelPadding} htmlFor="actionMessage">{t('message')}</label>
+                  <input type="radio" value="Maximize" name="actionType" checked={this.props.actionType == "Maximize"} onChange={this.props.handleActionTypeChange}/>
+                  <label  style={styles.labelPadding} htmlFor="actionLaunch">{t('maximize')}</label>
+                  <input type="radio" value="Minimize" name="actionType" checked={this.props.actionType == "Minimize"} onChange={this.props.handleActionTypeChange}/>
+                  <label  style={styles.labelPadding} htmlFor="actionMessage">{t('minimize')}</label>
+
                 </div>
                 {/* App target modes are used to determine which instance of an App should be communicated with. You can create a new instance to send the Action to, or you could reuse an existing instance that is open. */}
                 <div>
                   <label style={styles.boldText}>{t('app_target_mode')}</label>
                   <input type="radio" value="PluginCreate" name="targetMode" checked={this.props.appTarget == "PluginCreate"} onChange={this.props.handleAppTargetChange}/>
-                  <label htmlFor="targetCreate">{t('create_new')}</label>
+                  <label  style={styles.labelPadding} htmlFor="targetCreate">{t('create_new')}</label>
                   <input type="radio" value="PluginFindAnyOrCreate" name="targetMode" checked={this.props.appTarget == "PluginFindAnyOrCreate"} onChange={this.props.handleAppTargetChange}/>
-                  <label htmlFor="targetReuse">{t('reuse_any_open')}</label>
+                  <label  style={styles.labelPadding} htmlFor="targetReuse">{t('reuse_any_open')}</label>
+                  <input type="radio" value="PluginSpecifyTargetID" name="targetMode" checked={this.props.appTarget == "PluginSpecifyTargetID"} onChange={this.props.handleAppTargetChange}/>
+                  <label  style={styles.labelPadding} htmlFor="targetReuse">Specify Target ID</label>
                 </div>      
                 <span style={mergeStyles(styles.divInput, styles.boldText)}>{t('parameters')}</span>
                 <div style={styles.divTextareaInput}>
@@ -78,11 +93,11 @@ class SamplePage extends React.Component<any, any> {
                 <span style={styles.biggerBoldText}>{t('dataservice_request_test')}</span>
               </div>
               <div>
-                <input placeholder={t('message')} value={this.props.helloText} onChange={this.props.handleHelloTextChange}/>      
-                <button disabled={this.props.helloText === ''} onClick={this.props.sayHello}>{t('run')}</button>
+                <input placeholder={t('message')} value={this.props.helloText} style={styles.inputText} onChange={this.props.handleHelloTextChange}/>      
+                <button style={styles.runButton} disabled={this.props.helloText === ''} onClick={this.props.sayHello}>{t('run')}</button>
               </div>
               <div>
-                <label>{t('response')}</label>
+                <label style={styles.responseLabel}>{t('response')}</label>
                 <textarea readOnly style={styles.serverResponse} placeholder={t('response')}
                   value={this.props.helloResponse} onChange={this.props.handleHelloResponseChange}></textarea>
               </div>
